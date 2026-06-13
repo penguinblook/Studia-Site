@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Studia brand tokens — mirrors the app's constants/theme.ts
+--------------------------------------------------------------------------- */
+
+:root {
+  /* raw palette */
+  --blue: #3a5d9c;
+  --blue-deep: #2a4878;
+  --blue-soft: #5577b6;
+  --paper: #faf9f5;
+  --paper-warm: #f3f1ea;
+  --ink: #1a1f2b;
+  --ink-soft: #3a414f;
+  --muted: #8a909c;
+  --line: #e4e2dc;
+  --charcoal: #15181f;
+  --charcoal-soft: #1f2430;
+  --charcoal-line: #2c313c;
+
+  /* semantic (light = hero) — dark values mirror the app's dark palette */
+  --bg: var(--paper);
+  --bg-warm: var(--paper-warm);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --fg-muted: var(--muted);
+  --rule: var(--line);
+  /* accent = blue lifted for legibility in dark; brand-blue surfaces never invert */
+  --accent: var(--blue);
+  --accent-deep: var(--blue-deep);
+  --accent-soft: var(--blue-soft);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--charcoal);
+    --bg-warm: var(--charcoal-soft);
+    --fg: #f3f1ea;
+    --fg-soft: #c4c8d0;
+    --fg-muted: #868d9b;
+    --rule: var(--charcoal-line);
+    --accent: #6f93cf;
+    --accent-deep: #4a6da8;
+    --accent-soft: #88a8dd;
+  }
+}
+
+@theme inline {
+  --color-blue: var(--blue);
+  --color-blue-deep: var(--blue-deep);
+  --color-blue-soft: var(--blue-soft);
+  --color-paper: var(--paper);
+  --color-paper-warm: var(--paper-warm);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-soft: var(--charcoal-soft);
+  --color-charcoal-line: var(--charcoal-line);
+
+  --color-bg: var(--bg);
+  --color-bg-warm: var(--bg-warm);
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-fg-muted: var(--fg-muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-display: var(--font-archivo-black), system-ui, sans-serif;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--blue);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* Paper grain — subtle, fixed, never interactive */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------------------
+   Type helpers
+--------------------------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Outlined display type (marquee) */
+.text-stroke {
+  -webkit-text-stroke: 1.5px var(--fg);
+  color: transparent;
+}
+
+/* Masked line reveals — overflow wrapper + GSAP yPercent on the inner line */
+.mask {
+  display: block;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Scrollytelling stacks. Siblings are absolutely stacked; the first item is
+   in-flow and visible so the layout works before hydration / without JS.
+   Under reduced motion the stack flattens to a normal vertical flow.
+--------------------------------------------------------------------------- */
+
+.stack {
+  position: relative;
+}
+
+.stack-item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stack-item:first-child {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-item {
+    position: static;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto;
+    margin-top: 2rem;
+  }
+  .stack-item:first-child {
+    margin-top: 0;
+  }
+}
+
+/* Marquee */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+}
+
+/* ---------------------------------------------------------------------------
+   Motion — scroll reveal, ticks. Honors prefers-reduced-motion.
+--------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(220px); }
+}
+
+.scanline {
+  animation: scanline 2.6s linear infinite alternate;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.blink {
+  animation: blink 1.6s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .scanline,
+  .blink {
+    animation: none;
+  }
+}

@@ -1,0 +1,180 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { gsap, MOTION_OK } from "@/lib/gsap";
+import {
+  PhoneFrame,
+  ActiveScreen,
+  CameraScreen,
+  VerifiedScreen,
+  LeaderboardScreen,
+} from "./screens";
+
+const STEPS = [
+  {
+    num: "01",
+    tag: "01 — Lock in",
+    title: "Your phone goes quiet.",
+    body: "Start a session and Studia shields your distracting apps for up to two hours. Strict mode means no backing out — just an austere countdown and the work in front of you.",
+  },
+  {
+    num: "02",
+    tag: "02 — Prove it",
+    title: "Show your work.",
+    body: "When the timer ends, the camera opens. One live photo of your setup — books, notes, your screen. No gallery uploads. Three attempts, then the ruling stands.",
+  },
+  {
+    num: "03",
+    tag: "03 — Get Verified",
+    title: "Earn the stamp.",
+    body: "A neutral AI witness rules on your proof. Pass, and you get the recap card — verified study time, stamped, ready to post.",
+  },
+  {
+    num: "04",
+    tag: "04 — Climb",
+    title: "Watch your rank move.",
+    body: "Every verified minute counts — for your rank at school, and your school's rank in the city. Then you do it again tomorrow.",
+  },
+];
+
+export default function LoopScrolly() {
+  const root = useRef<HTMLElement>(null);
+  const progressRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const mm = gsap.matchMedia(root);
+    mm.add(MOTION_OK, () => {
+      const el = root.current;
+      if (!el) return;
+      const screens = gsap.utils.toArray<HTMLElement>(".loop-screen", el);
+      const captions = gsap.utils.toArray<HTMLElement>(".loop-caption", el);
+      const ghosts = gsap.utils.toArray<HTMLElement>(".loop-ghost", el);
+      const phone = el.querySelector(".loop-phone");
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el.querySelector(".loop-pin"),
+          start: "top top",
+          end: "+=360%",
+          pin: true,
+          scrub: 0.7,
+          snap: {
+            snapTo: "labels",
+            duration: { min: 0.15, max: 0.45 },
+            ease: "power1.inOut",
+          },
+          onUpdate: (self) => {
+            const idx = Math.min(3, Math.round(self.progress * 3));
+            if (progressRef.current)
+              progressRef.current.textContent = `0${idx + 1}`;
+          },
+        },
+      });
+
+      tl.addLabel("s0", 0);
+      for (let i = 1; i < STEPS.length; i++) {
+        const dir = i % 2 === 0 ? 1 : -1;
+        tl
+          // the phone "turns in your hand" between screens
+          .to(phone, { rotationY: 14 * dir, duration: 0.24, ease: "power2.in" }, i)
+          .to(phone, { rotationY: 0, duration: 0.26, ease: "power2.out" }, i + 0.26)
+          .to(screens[i - 1], { autoAlpha: 0, x: -40 * dir, duration: 0.4 }, i)
+          .fromTo(
+            screens[i],
+            { autoAlpha: 0, x: 40 * dir, scale: 0.97 },
+            { autoAlpha: 1, x: 0, scale: 1, duration: 0.42 },
+            i + 0.1
+          )
+          .to(captions[i - 1], { autoAlpha: 0, y: -26, duration: 0.36 }, i)
+          .fromTo(
+            captions[i],
+            { autoAlpha: 0, y: 26 },
+            { autoAlpha: 1, y: 0, duration: 0.38 },
+            i + 0.1
+          )
+          .to(ghosts[i - 1], { autoAlpha: 0, yPercent: -30, duration: 0.4 }, i)
+          .fromTo(
+            ghosts[i],
+            { autoAlpha: 0, yPercent: 30 },
+            { autoAlpha: 1, yPercent: 0, duration: 0.4 },
+            i + 0.08
+          )
+          .addLabel(`s${i}`, i + 0.55);
+      }
+      tl.to({}, { duration: 0.45 });
+    });
+    return () => mm.revert();
+  }, []);
+
+  return (
+    <section ref={root} id="loop" className="bg-bg-warm">
+      <div className="loop-pin relative flex min-h-svh flex-col overflow-hidden px-5 py-7 sm:px-8">
+        {/* oversized ghost numeral behind everything */}
+        <div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center md:justify-start md:pl-[4vw]"
+          aria-hidden="true"
+        >
+          <div className="stack">
+            {STEPS.map((s) => (
+              <span
+                key={s.num}
+                className="loop-ghost stack-item text-stroke display block text-[42vw] leading-none opacity-[0.14] md:text-[26vw]"
+              >
+                {s.num}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between">
+          <p className="tag text-fg-muted">The loop</p>
+          <p className="font-mono text-sm text-fg-muted" aria-hidden="true">
+            <span ref={progressRef} className="text-accent">
+              01
+            </span>{" "}
+            / 04
+          </p>
+        </div>
+
+        <div className="relative mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 md:grid-cols-12">
+          <div className="order-2 md:order-none md:col-span-5">
+            <div className="stack min-h-[190px] md:min-h-[260px]">
+              {STEPS.map((s) => (
+                <div key={s.tag} className="loop-caption stack-item">
+                  <p className="tag text-accent">{s.tag}</p>
+                  <h3 className="display mt-4 text-2xl sm:text-3xl md:text-[2.6rem]">
+                    {s.title}
+                  </h3>
+                  <p className="mt-4 max-w-sm text-sm leading-relaxed text-fg-soft sm:text-base">
+                    {s.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="order-1 flex justify-center [perspective:1200px] md:order-none md:col-span-6 md:col-start-7">
+            <div className="loop-phone origin-center scale-[0.72] sm:scale-[0.85] md:scale-100">
+              <PhoneFrame label="The Studia loop on a phone: lock screen, proof camera, verified recap, leaderboard">
+                <div className="stack h-full">
+                  <div className="loop-screen stack-item h-full">
+                    <ActiveScreen ticking={false} />
+                  </div>
+                  <div className="loop-screen stack-item h-full">
+                    <CameraScreen />
+                  </div>
+                  <div className="loop-screen stack-item h-full">
+                    <VerifiedScreen />
+                  </div>
+                  <div className="loop-screen stack-item h-full">
+                    <LeaderboardScreen />
+                  </div>
+                </div>
+              </PhoneFrame>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
