@@ -160,10 +160,10 @@ export default function Hero() {
   return (
     <section ref={root} className="relative">
       <div className="hero-stage relative h-svh overflow-hidden">
-        <div className="mx-auto grid h-full max-w-7xl grid-rows-[auto_1fr] items-center gap-4 px-5 pb-4 pt-4 sm:px-8 md:grid-cols-12 md:grid-rows-1 md:gap-10">
+        <div className="mx-auto grid h-full max-w-7xl grid-rows-[auto_auto] content-center items-center gap-3 px-5 pb-4 pt-3 sm:gap-4 sm:px-8 md:grid-cols-12 md:grid-rows-1 md:content-stretch md:gap-10 md:pt-4">
           <div className="md:col-span-7">
 
-            <h1 className="display mt-5 text-[clamp(2.9rem,8.5vw,7.5rem)]">
+            <h1 className="display mt-2 text-[clamp(2.4rem,8vw,7.5rem)] sm:mt-5">
               <span className="mask">
                 <span className="hero-line block">Lock in.</span>
               </span>
@@ -175,20 +175,25 @@ export default function Hero() {
               </span>
             </h1>
 
-            <p className="hero-sub mt-6 max-w-md text-base leading-relaxed text-fg-soft sm:text-lg">
+            <p className="hero-sub mt-4 max-w-md text-sm leading-snug text-fg-soft sm:mt-6 sm:text-lg sm:leading-relaxed">
               Studia lets you track your study sessions whilst locking your phone. Build a habit of focused work, track where you work best, and compete against other schools in your city, country, and around the world.
             </p>
 
-            <div className="hero-cta mt-8 flex flex-wrap items-center gap-5">
+            <div className="hero-cta mt-5 flex flex-wrap items-center gap-5 sm:mt-8">
               <AppStoreButton />
             </div>
           </div>
 
           <div className="hero-slot flex items-center justify-center md:col-span-5 md:justify-end">
-            <div className="hero-frame origin-center scale-[0.68] sm:scale-[0.8] md:scale-100">
-              <PhoneFrame label="Studia lock screen: blue, with a white progress ring and countdown timer">
-                <ActiveScreen />
-              </PhoneFrame>
+            {/* fixed-size box so the phone's scaled (transform) footprint
+                reserves only its VISUAL height — otherwise the untransformed
+                280×590 box overflows the mobile viewport and clips the phone. */}
+            <div className="flex h-[330px] w-[168px] items-center justify-center sm:h-[472px] sm:w-[226px] md:h-auto md:w-auto">
+              <div className="hero-frame origin-center scale-[0.56] sm:scale-[0.8] md:scale-100">
+                <PhoneFrame label="Studia lock screen: blue, with a white progress ring and countdown timer">
+                  <ActiveScreen />
+                </PhoneFrame>
+              </div>
             </div>
           </div>
         </div>

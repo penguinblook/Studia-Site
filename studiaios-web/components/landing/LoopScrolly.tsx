@@ -122,7 +122,7 @@ export default function LoopScrolly() {
 
   return (
     <section ref={root} id="loop" className="bg-bg-warm">
-      <div className="loop-pin relative flex min-h-svh flex-col overflow-hidden px-5 py-7 sm:px-8">
+      <div className="loop-pin relative flex min-h-svh flex-col overflow-hidden px-5 py-5 sm:px-8 sm:py-7">
         <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between">
           <p className="tag text-fg-muted">The loop</p>
           <p className="font-mono text-sm text-fg-muted" aria-hidden="true">
@@ -135,7 +135,7 @@ export default function LoopScrolly() {
 
         <div className="relative mx-auto grid w-full max-w-7xl flex-1 items-center gap-8 md:grid-cols-12">
           <div className="order-2 md:order-none md:col-span-5">
-            <div className="stack min-h-[190px] md:min-h-[260px]">
+            <div className="stack min-h-[170px] md:min-h-[260px]">
               {STEPS.map((s) => (
                 <div key={s.tag} className="loop-caption stack-item">
                   <p className="tag text-accent">{s.tag}</p>
@@ -171,8 +171,12 @@ export default function LoopScrolly() {
               </div>
             </div>
 
-            <div className="loop-phone relative z-10 origin-center scale-[0.72] sm:scale-[0.85] md:scale-100">
-              <PhoneFrame label="The Studia loop on a phone: lock screen, proof camera, verified recap, leaderboard">
+            {/* fixed-size box: collapse the phone's scaled-transform footprint
+                to its visual height so it doesn't overflow mobile svh and push
+                the captions off the bottom of the screen. */}
+            <div className="relative z-10 flex h-[392px] w-[186px] items-center justify-center sm:h-[502px] sm:w-[238px] md:h-auto md:w-auto">
+              <div className="loop-phone origin-center scale-[0.66] sm:scale-[0.85] md:scale-100">
+                <PhoneFrame label="The Studia loop on a phone: lock screen, proof camera, verified recap, leaderboard">
                 <div className="stack h-full">
                   <div className="loop-screen stack-item h-full">
                     <ActiveScreen ticking={false} />
@@ -187,7 +191,8 @@ export default function LoopScrolly() {
                     <LeaderboardScreen />
                   </div>
                 </div>
-              </PhoneFrame>
+                </PhoneFrame>
+              </div>
             </div>
           </div>
         </div>
