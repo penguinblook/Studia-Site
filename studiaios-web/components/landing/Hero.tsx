@@ -160,7 +160,7 @@ export default function Hero() {
   return (
     <section ref={root} className="relative">
       <div className="hero-stage relative h-svh overflow-hidden">
-        <div className="mx-auto grid h-full max-w-7xl grid-rows-[auto_auto] content-center items-center gap-3 px-5 pb-4 pt-3 sm:gap-4 sm:px-8 md:grid-cols-12 md:grid-rows-1 md:content-stretch md:gap-10 md:pt-4">
+        <div className="mx-auto grid h-full max-w-7xl grid-rows-[auto_auto] content-start items-center gap-3 px-5 pb-4 pt-[68px] sm:content-center sm:gap-4 sm:px-8 sm:pt-4 md:grid-cols-12 md:grid-rows-1 md:gap-10">
           <div className="md:col-span-7">
 
             <h1 className="display mt-2 text-[clamp(2.4rem,8vw,7.5rem)] sm:mt-5">
@@ -188,8 +188,8 @@ export default function Hero() {
             {/* fixed-size box so the phone's scaled (transform) footprint
                 reserves only its VISUAL height — otherwise the untransformed
                 280×590 box overflows the mobile viewport and clips the phone. */}
-            <div className="flex h-[330px] w-[168px] items-center justify-center sm:h-[472px] sm:w-[226px] md:h-auto md:w-auto">
-              <div className="hero-frame origin-center scale-[0.56] sm:scale-[0.8] md:scale-100">
+            <div className="flex h-[296px] w-[150px] items-center justify-center sm:h-[472px] sm:w-[226px] md:h-auto md:w-auto">
+              <div className="hero-frame origin-center scale-[0.5] sm:scale-[0.8] md:scale-100">
                 <PhoneFrame label="Studia lock screen: blue, with a white progress ring and countdown timer">
                   <ActiveScreen />
                 </PhoneFrame>
