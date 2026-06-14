@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { LegalShell, LegalSection } from "@/components/LegalShell";
 import { COMPANY, CONTACT_EMAIL, EFFECTIVE_DATE } from "@/lib/site";
 
@@ -14,7 +13,7 @@ export default function PrivacyPage() {
     <LegalShell
       tag="Legal"
       title="Privacy Policy"
-      meta={`Effective: ${EFFECTIVE_DATE} · Operated by ${COMPANY}`}
+      meta={`UPDATED: ${EFFECTIVE_DATE} · Operated by ${COMPANY}`}
       intro="Studia is built around proof, so we want to be precise about what we collect, why, and what we never touch. The short version: we collect what the product needs to work, your proof photos are judged and then discarded — never stored — your microphone audio is never recorded, and your Screen Time data never leaves your device."
     >
       <LegalSection index="01" title="Who we are">
@@ -39,7 +38,7 @@ export default function PrivacyPage() {
           This is the core of the product.
         </p>
         <p>
-          <strong>Proof photos — judged, then discarded.</strong> At the end of
+          <strong>Proof photos.</strong> At the end of
           a session the camera takes a live photo of your setup (no gallery
           uploads). The downscaled photo is sent to an AI vision model, which
           returns a verdict — and the image is then discarded.{" "}
@@ -49,7 +48,7 @@ export default function PrivacyPage() {
           models.
         </p>
         <p>
-          <strong>Analytics.</strong> We use PostHog to understand how the app
+          <strong>Analytics. </strong> We use PostHog to understand how the app
           is used — events (e.g. &ldquo;session started&rdquo;), device type,
           OS version, and similar technical data. We use this to fix bugs and
           improve the product, not to build advertising profiles.
@@ -76,9 +75,9 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
-      <LegalSection index="04" title="Microphone — audio is never recorded">
+      <LegalSection index="04" title="Microphone">
         <p>
-          Studia&rsquo;s noise sensing measures the ambient sound level
+          Studia+&rsquo;s noise sensing measures the ambient sound level
           (a decibel value) of your study environment. To be unambiguous:
         </p>
         <ul>
@@ -104,7 +103,7 @@ export default function PrivacyPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection index="05" title="Screen Time — processed on your device">
+      <LegalSection index="05" title="Screen Time">
         <p>
           App blocking is built on Apple&rsquo;s Screen Time (FamilyControls
           and ManagedSettings) frameworks. Apple designed these so that the
@@ -133,7 +132,7 @@ export default function PrivacyPage() {
             billing.
           </li>
           <li>
-            <strong>AI verification provider</strong> — proof photos are
+            <strong>Google</strong> — proof photos are
             processed transiently to produce a verification ruling, then
             discarded; they are never retained or used to train models.
           </li>
@@ -146,10 +145,9 @@ export default function PrivacyPage() {
 
       <LegalSection index="07" title="Leaderboards are social">
         <p>
-          Leaderboards display your display name, rank, school, and verified
+          By default, Leaderboards display your display name, rank, school, and verified
           study time to other users (e.g. classmates at your school), per your
-          in-app settings. Don&rsquo;t put anything in your display name you
-          wouldn&rsquo;t want a rival to read.
+          in-app settings. However, in settings you can choose to hide your name from the leaderboard and appear as &ldquo;Anonymous&rdquo; instead.
         </p>
       </LegalSection>
 
@@ -157,12 +155,15 @@ export default function PrivacyPage() {
         <p>
           We keep your data while your account is active. When you delete your
           account, your personal data is deleted from our systems within 30
-          days, except where we are legally required to retain records. (Proof
-          photos need no deletion — they were never stored.) See{" "}
-          <Link href="/delete-account" className="text-accent underline underline-offset-4">
-            Delete account
-          </Link>{" "}
-          for how to request deletion.
+          days, except where we are legally required to retain records. To request
+          deletion, email{" "}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="text-accent underline underline-offset-4"
+          >
+            {CONTACT_EMAIL}
+          </a>
+          .
         </p>
       </LegalSection>
 

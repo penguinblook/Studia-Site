@@ -36,7 +36,7 @@ export default function FinalCta() {
             <AppStoreButton variant="paper" />
           </div>
           <p className="tag mt-8 text-paper/60">
-            Free on iOS — your first session takes 25 minutes
+            improve your studying today
           </p>
         </div>
       </div>

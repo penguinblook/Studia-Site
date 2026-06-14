@@ -74,7 +74,7 @@ export function PhoneFrame({
       aria-label={label}
     >
       <div className="phone-screen relative h-[572px] w-[264px] overflow-hidden rounded-[36px] bg-charcoal">
-        <div className="pointer-events-none absolute left-1/2 top-2 z-20 h-[20px] w-[78px] -translate-x-1/2 rounded-full bg-black/85" />
+        <div className="phone-notch pointer-events-none absolute left-1/2 top-2 z-20 h-[20px] w-[78px] -translate-x-1/2 rounded-full bg-black/85" />
         {children}
       </div>
     </div>
@@ -87,10 +87,15 @@ export function PhoneFrame({
 export function ActiveScreen({
   ticking = true,
   cue = false,
+  intro = false,
 }: {
   ticking?: boolean;
   /** replaces the End-session label with the scroll cue (hero only) */
   cue?: boolean;
+  /** hero intro variant: tags the ring with `.hero-ring` so the hero can fade
+   *  it in on scroll. Layout stays identical to the phone so the full-bleed
+   *  intro and the landed phone line up at every scroll position. */
+  intro?: boolean;
 }) {
   const SIZE = 176;
   const STROKE = 5;
@@ -111,7 +116,11 @@ export function ActiveScreen({
       />
 
       <div className="relative" style={{ width: SIZE, height: SIZE }}>
-        <svg width={SIZE} height={SIZE} className="-rotate-90">
+        <svg
+          width={SIZE}
+          height={SIZE}
+          className={`-rotate-90 ${intro ? "hero-ring" : ""}`}
+        >
           <circle
             cx={SIZE / 2}
             cy={SIZE / 2}
@@ -134,9 +143,9 @@ export function ActiveScreen({
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           {ticking ? (
-            <SessionTimer className="display text-[40px] tabular-nums leading-none tracking-[-0.03em] text-paper" />
+            <SessionTimer className="display text-[43px] tabular-nums leading-none tracking-[-0.047em] text-paper" />
           ) : (
-            <span className="display text-[40px] tabular-nums leading-none tracking-[-0.03em] text-paper">
+            <span className="display text-[43px] tabular-nums leading-none tracking-[-0.047em] text-paper">
               1:42:07
             </span>
           )}
@@ -283,7 +292,7 @@ export function RecapCard({
       <div className="flex flex-1 flex-col items-start justify-center">
         <span
           className="display normal-case"
-          style={{ fontSize: s(66), lineHeight: 1.04, letterSpacing: s(-3), color: text }}
+          style={{ fontSize: s(52), lineHeight: 1.04, letterSpacing: s(-3), color: text }}
         >
           1h 42m
         </span>
@@ -335,7 +344,7 @@ export function RecapCard({
           className="font-mono uppercase"
           style={{ fontSize: s(10), letterSpacing: s(1), color: muted }}
         >
-          Thu, Jun 11
+          THU, JUN 11
         </span>
         <span
           className="display flex-1 truncate text-right normal-case"
@@ -349,38 +358,76 @@ export function RecapCard({
 }
 
 /* ------------------------------------------------ verify.tsx (verified result) */
+function DownloadIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true">
+      <path d="M12 4v10m0 0l-4-4m4 4l4-4M5 18.5h14" stroke="#faf9f5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CopyIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2.5" stroke="#faf9f5" strokeWidth="2" />
+      <path d="M5 15V6a2 2 0 0 1 2-2h8" stroke="#faf9f5" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function EllipsisIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="#faf9f5" aria-hidden="true">
+      <circle cx="5" cy="12" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="19" cy="12" r="2" />
+    </svg>
+  );
+}
+
 export function VerifiedScreen() {
+  const actions: { label: string; icon: ReactNode }[] = [
+    { label: "Save", icon: <DownloadIcon /> },
+    { label: "Copy", icon: <CopyIcon /> },
+    { label: "More", icon: <EllipsisIcon /> },
+  ];
   return (
     <div className="flex h-full w-full flex-col items-center bg-blue px-4 pb-5 pt-8">
-      <div className="flex h-[30px] w-full items-center justify-start">
+      {/* doneHeader — close sits top-right (justify-end) */}
+      <div className="flex h-[30px] w-full items-center justify-end">
         <CloseCircle />
       </div>
 
-      <h3 className="display mt-1 text-[16px] normal-case tracking-[-0.02em] text-paper">
+      <h3 className="display text-[16px] normal-case tracking-[-0.02em] text-paper">
         Session verified
       </h3>
-      <p className="mt-[4px] text-[9px] font-medium text-white/[0.82]">
+      <p className="mt-[7px] text-[9px] font-medium text-white/[0.82]">
         Nice! This one counts as verified study time.
       </p>
 
-      <div className="mt-4">
+      <div className="mt-3">
         <RecapCard scale={0.68} />
       </div>
 
       {/* carousel dots */}
-      <div className="mt-3 flex items-center gap-[4px]">
+      <div className="mt-[10px] flex items-center gap-[5px]">
         <span className="h-[5px] w-[12px] rounded-full bg-paper" />
         <span className="h-[5px] w-[5px] rounded-full bg-white/[0.18]" />
         <span className="h-[5px] w-[5px] rounded-full bg-white/[0.18]" />
       </div>
+      <span className="mt-[3px] font-mono text-[7px] uppercase tracking-[0.14em] text-white/[0.62]">
+        Classic
+      </span>
 
       <div className="flex-1" />
 
-      <div className="flex w-full items-start justify-center gap-[18px]">
-        {["Save", "Copy", "More"].map((l) => (
-          <span key={l} className="flex flex-col items-center gap-[4px]">
-            <span className="h-[30px] w-[30px] rounded-full bg-white/[0.14]" />
-            <span className="display text-[8px] normal-case text-paper">{l}</span>
+      <div className="flex w-full items-start justify-center gap-[11px]">
+        {actions.map((a) => (
+          <span key={a.label} className="flex w-[42px] flex-col items-center gap-[5px]">
+            <span className="flex h-[38px] w-[38px] items-center justify-center rounded-full border border-white/[0.18] bg-white/10">
+              {a.icon}
+            </span>
+            <span className="display text-[8px] normal-case text-paper">{a.label}</span>
           </span>
         ))}
       </div>
@@ -388,88 +435,222 @@ export function VerifiedScreen() {
   );
 }
 
-/* ------------------------------------------------ app/leaderboard (paper) */
-const ROWS = [
-  { rank: 9, name: "m.okafor", h: "20.7h" },
-  { rank: 10, name: "studywithlena", h: "19.9h" },
-  { rank: 11, name: "you", h: "19.2h", you: true },
-  { rank: 12, name: "dru.kim", h: "18.4h" },
-  { rank: 13, name: "quietgrind", h: "17.1h" },
+/* ------------------------------------------------ app/leaderboard/index.tsx
+   School leaderboard — blueDeep hero (RANKINGS badge, title, geo tabs) over a
+   paper sheet (metric toggle, scope chips, top-3 podium, list rows). Scaled
+   from the app's 390pt layout (×0.68). */
+function ChevronLeft({ size = 12, color = "#faf9f5" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true">
+      <path d="M15 5l-7 7 7 7" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function TrophyIcon({ size = 9, color = "#faf9f5" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill={color} aria-hidden="true">
+      <path d="M7 4h10v3a5 5 0 0 1-10 0V4zM5 5h2v1.8A3 3 0 0 1 5 5zm12 0h2a3 3 0 0 1-2 1.8V5zM9.5 13.5h5L14 17h1.5a1 1 0 0 1 0 2h-7a1 1 0 0 1 0-2H10l-.5-3.5z" />
+    </svg>
+  );
+}
+
+function ClockIcon({ size = 9, color = "#faf9f5" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5" stroke={color} strokeWidth="2" />
+      <path d="M12 7.5V12l3 2" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PeopleIcon({ size = 9, color = "#faf9f5" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" aria-hidden="true">
+      <circle cx="9" cy="8" r="3" stroke={color} strokeWidth="2" />
+      <path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M16 6.2A2.6 2.6 0 0 1 16 11M17 13.4c2.3.3 4 2.2 4 4.6" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+type Crest = { rank: number; name: string; crest: string; value: string; you?: boolean };
+
+const PODIUM: { left: Crest; top: Crest; right: Crest } = {
+  left: { rank: 2, name: "Lincoln Prep", crest: "LINC", value: "128h" },
+  top: { rank: 1, name: "Westfield High", crest: "WEST", value: "142h" },
+  right: { rank: 3, name: "Riverside", crest: "RIVE", value: "119h" },
+};
+
+const SCHOOL_ROWS: (Crest & { meta: string })[] = [
+  { rank: 4, name: "Eastgate High", crest: "EAST", value: "104h", meta: "Chicago · 212 studiers" },
+  { rank: 5, name: "St. Mary's Academy", crest: "STMA", value: "98h", meta: "Boston · 188 studiers" },
+  { rank: 6, name: "Northside High", crest: "NORT", value: "92h", meta: "Austin · 170 studiers", you: true },
 ];
+
+function PodiumCard({ data, top, minHeight }: { data: Crest; top?: boolean; minHeight: number }) {
+  return (
+    <div
+      className={`relative flex flex-1 flex-col items-center justify-end gap-[4px] rounded-[9px] px-[5px] pb-[8px] pt-[16px] ${
+        top ? "bg-blue-deep" : "bg-paper-warm"
+      }`}
+      style={{ minHeight }}
+    >
+      <span
+        className={`absolute top-[5px] font-mono text-[7px] tracking-[0.12em] ${
+          top ? "text-white/[0.62]" : "text-muted"
+        }`}
+      >
+        #{data.rank}
+      </span>
+      <span
+        className={`flex h-[28px] w-[28px] items-center justify-center rounded-[7px] border ${
+          top ? "border-white/[0.36] bg-white/[0.16]" : "border-ink bg-paper"
+        }`}
+      >
+        <span className={`display text-[8px] normal-case tracking-[0.02em] ${top ? "text-paper" : "text-ink"}`}>
+          {data.crest}
+        </span>
+      </span>
+      <span
+        className={`display text-center text-[8px] normal-case leading-[1.1] tracking-[-0.02em] ${
+          top ? "text-paper" : "text-ink"
+        }`}
+      >
+        {data.name}
+      </span>
+      <span className={`display text-[12px] normal-case tracking-[-0.04em] ${top ? "text-paper" : "text-ink"}`}>
+        {data.value}
+      </span>
+    </div>
+  );
+}
 
 export function LeaderboardScreen() {
   return (
-    <div className="flex h-full w-full flex-col bg-paper px-4 pb-4 pt-9 text-ink">
-      <span className="tag self-start rounded-full border border-line px-[8px] py-[4px] !text-[7px] text-muted">
-        Rankings
-      </span>
-      <h3 className="display mt-[8px] text-[19px] normal-case tracking-[-0.02em]">
-        School leaderboard
-      </h3>
-
-      <div className="mt-[10px] flex gap-[5px]">
-        {["School", "City", "National"].map((g, i) => (
-          <span
-            key={g}
-            className={`rounded-full px-[10px] py-[5px] font-mono text-[8px] uppercase tracking-[0.08em] ${
-              i === 0 ? "bg-ink text-paper" : "border border-line text-muted"
-            }`}
-          >
-            {g}
+    <div className="flex h-full w-full flex-col bg-blue-deep">
+      {/* hero */}
+      <div className="px-[14px] pb-[13px] pt-9">
+        <div className="mt-1 flex items-center justify-between">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/[0.18] bg-white/10">
+            <ChevronLeft />
           </span>
-        ))}
+          <span className="flex items-center gap-[4px] rounded-full bg-white/10 px-[7px] py-[4px]">
+            <TrophyIcon />
+            <span className="font-mono text-[7px] uppercase tracking-[0.14em] text-paper">
+              Rankings
+            </span>
+          </span>
+          <span className="w-6" />
+        </div>
+
+        <h3 className="display mt-[13px] text-[18px] normal-case tracking-[-0.03em] text-paper">
+          School leaderboard
+        </h3>
+        <p className="mt-[4px] font-mono text-[8px] uppercase tracking-[0.11em] text-white/[0.62]">
+          Hours studied · Everywhere
+        </p>
+
+        <div className="mt-[12px] flex gap-[2px] rounded-[8px] bg-white/10 p-[3px]">
+          {["City", "Country", "Global"].map((g, i) => (
+            <span
+              key={g}
+              className={`flex-1 rounded-[6px] py-[6px] text-center font-mono text-[8px] uppercase tracking-[0.08em] ${
+                i === 2 ? "bg-paper text-ink" : "text-white/[0.82]"
+              }`}
+            >
+              {g}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <ul className="mt-[12px] flex-1">
-        {ROWS.map((r) => (
-          <li
-            key={r.rank}
-            className={`flex items-center gap-[9px] border-b border-line py-[9px] last:border-b-0 ${
-              r.you ? "-mx-2 rounded-[10px] border-b-0 bg-blue px-2" : ""
-            }`}
-          >
-            <span
-              className={`w-[18px] font-mono text-[10px] tabular-nums ${
-                r.you ? "text-white/[0.62]" : "text-muted"
-              }`}
-            >
-              {r.rank}
-            </span>
-            <span
-              className={`h-[20px] w-[20px] rounded-full ${
-                r.you ? "bg-white/20" : "bg-paper-warm"
-              }`}
-            />
-            <span
-              className={`display flex-1 truncate text-[11px] normal-case ${
-                r.you ? "text-paper" : "text-ink"
-              }`}
-            >
-              {r.name}
-              {r.you && (
-                <span className="ml-[6px] font-mono text-[8px] text-white/[0.82]">
-                  ↑3
-                </span>
-              )}
-            </span>
-            <span
-              className={`font-mono text-[10px] tabular-nums ${
-                r.you ? "text-white/[0.82]" : "text-ink-soft"
-              }`}
-            >
-              {r.h}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {/* paper sheet */}
+      <div className="flex flex-1 flex-col rounded-t-[15px] bg-paper px-[14px] pt-[11px]">
+        {/* metric toggle */}
+        <div className="flex gap-[2px] rounded-[8px] bg-paper-warm p-[3px]">
+          <span className="flex flex-1 items-center justify-center gap-[4px] rounded-[6px] bg-ink py-[7px]">
+            <ClockIcon color="#faf9f5" />
+            <span className="display text-[9px] normal-case tracking-[-0.01em] text-paper">Hours</span>
+          </span>
+          <span className="flex flex-1 items-center justify-center gap-[4px] rounded-[6px] py-[7px]">
+            <PeopleIcon color="#3a414f" />
+            <span className="display text-[9px] normal-case tracking-[-0.01em] text-ink-soft">Studiers</span>
+          </span>
+        </div>
 
-      <div className="flex items-center justify-between rounded-[12px] border border-line bg-paper-warm px-[12px] py-[9px]">
-        <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-muted">
-          Your school — city
-        </span>
-        <span className="display text-[12px] normal-case text-blue">
-          #3 of 41
-        </span>
+        {/* scope chips */}
+        <div className="mt-[12px] flex gap-[4px]">
+          {["This week", "Month", "All time"].map((s, i) => (
+            <span
+              key={s}
+              className={`display rounded-full border px-[8px] py-[4px] text-[7px] normal-case tracking-[-0.01em] ${
+                i === 0 ? "border-ink bg-ink text-paper" : "border-line text-ink-soft"
+              }`}
+            >
+              {s}
+            </span>
+          ))}
+        </div>
+
+        {/* podium */}
+        <div className="mt-[14px] flex items-end gap-[5px]">
+          <PodiumCard data={PODIUM.left} minHeight={73} />
+          <PodiumCard data={PODIUM.top} top minHeight={87} />
+          <PodiumCard data={PODIUM.right} minHeight={62} />
+        </div>
+
+        {/* list rows */}
+        <div className="mt-[10px] flex flex-col gap-[4px]">
+          {SCHOOL_ROWS.map((r) => (
+            <div
+              key={r.rank}
+              className={`flex items-center gap-[8px] rounded-[8px] p-[8px] ${
+                r.you ? "bg-blue-deep" : "bg-paper-warm"
+              }`}
+            >
+              <span
+                className={`w-[15px] text-center font-mono text-[8px] tabular-nums ${
+                  r.you ? "text-white/[0.62]" : "text-muted"
+                }`}
+              >
+                {r.rank}
+              </span>
+              <span
+                className={`flex h-[26px] w-[26px] items-center justify-center rounded-[6px] border ${
+                  r.you ? "border-white/[0.36] bg-white/[0.16]" : "border-ink bg-paper"
+                }`}
+              >
+                <span className={`display text-[8px] normal-case ${r.you ? "text-paper" : "text-ink"}`}>
+                  {r.crest}
+                </span>
+              </span>
+              <span className="min-w-0 flex-1">
+                <span
+                  className={`display block truncate text-[9px] normal-case tracking-[-0.02em] ${
+                    r.you ? "text-paper" : "text-ink"
+                  }`}
+                >
+                  {r.name}
+                </span>
+                <span
+                  className={`mt-[2px] block truncate font-mono text-[6px] tracking-[0.08em] ${
+                    r.you ? "text-white/[0.62]" : "text-muted"
+                  }`}
+                >
+                  {r.meta}
+                </span>
+              </span>
+              <span
+                className={`display text-[10px] normal-case tracking-[-0.04em] ${
+                  r.you ? "text-paper" : "text-ink"
+                }`}
+              >
+                {r.value}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

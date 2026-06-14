@@ -22,6 +22,9 @@ export default function Hero() {
       const screen = root.current?.querySelector<HTMLElement>(
         ".hero-slot .phone-screen"
       );
+      const notch = root.current?.querySelector<HTMLElement>(
+        ".hero-slot .phone-notch"
+      );
       if (!stage || !zoom || !screen) return;
 
       const BASE_W = 264;
@@ -59,14 +62,24 @@ export default function Hero() {
           scrub: 0.6,
           invalidateOnRefresh: true,
         },
-        defaults: { ease: "none" },
+        // force3D:false — a scrubbed timeline holds elements on their last
+        // transform; the default translate3d/matrix3d keeps text on a GPU layer
+        // and renders it blurry after scrolling back up. 2D transforms snap to
+        // the pixel grid and stay crisp.
+        defaults: { ease: "none", force3D: false },
       });
+
+      // The ring sits ~60px above the screen's vertical center in the normal
+      // lock-screen layout. At load we nudge the full-bleed intro down by that
+      // (×scale) so the countdown reads dead-center; the tween still ends at
+      // y:0 so it lands exactly on the phone — no mid-scroll misalignment.
+      const RING_RISE = 60;
 
       tl.fromTo(
         zoom,
         {
           x: () => from().x,
-          y: () => from().y,
+          y: () => from().y + RING_RISE * from().scale,
           scale: () => from().scale,
           borderRadius: 0,
         },
@@ -84,12 +97,25 @@ export default function Hero() {
         0
       )
         .to(".screen-cue", { autoAlpha: 0, duration: 0.1 }, 0.05)
+        // the ring is absent at load — it fades in as the session "ends"
+        .fromTo(
+          ".hero-ring",
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.18, ease: "power2.out" },
+          0.06
+        )
+        // fade the phone in WITHOUT touching its scale — scaling it here both
+        // clobbers the responsive Tailwind size and makes the zoom (measured
+        // against this slot) land too small, leaving a gap + clipped notch.
         .fromTo(
           ".hero-frame",
-          { autoAlpha: 0, scale: 0.94 },
-          { autoAlpha: 1, scale: 1, duration: 0.22, ease: "power2.out" },
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.22, ease: "power2.out" },
           0.42
         )
+        // once landed, cross-fade the intro layer out so the real phone (the
+        // normal lock screen, identical to step 01) is what's left on screen
+        .to(zoom, { autoAlpha: 0, duration: 0.12 }, 0.62)
         .fromTo(
           ".hero-kicker",
           { autoAlpha: 0, y: 18 },
@@ -115,6 +141,15 @@ export default function Hero() {
           0.7
         );
 
+      // The phone's notch is hidden behind the full-bleed intro the whole time;
+      // fade it in only once the intro has cross-faded away, so it appears on
+      // the already-landed phone instead of being clipped mid-zoom. Scoped to
+      // the hero phone so other phones on the page keep their notch.
+      if (notch) {
+        gsap.set(notch, { autoAlpha: 0 });
+        tl.to(notch, { autoAlpha: 1, duration: 0.1 }, 0.72);
+      }
+
       return () => {
         ScrollTrigger.removeEventListener("refreshInit", place);
       };
@@ -127,10 +162,6 @@ export default function Hero() {
       <div className="hero-stage relative h-svh overflow-hidden">
         <div className="mx-auto grid h-full max-w-7xl grid-rows-[auto_1fr] items-center gap-4 px-5 pb-4 pt-4 sm:px-8 md:grid-cols-12 md:grid-rows-1 md:gap-10">
           <div className="md:col-span-7">
-            <p className="hero-kicker tag flex items-center gap-3 text-fg-muted">
-              <span className="inline-block h-2 w-2 bg-accent" aria-hidden="true" />
-              Strava for studying
-            </p>
 
             <h1 className="display mt-5 text-[clamp(2.9rem,8.5vw,7.5rem)]">
               <span className="mask">
@@ -145,15 +176,11 @@ export default function Hero() {
             </h1>
 
             <p className="hero-sub mt-6 max-w-md text-base leading-relaxed text-fg-soft sm:text-lg">
-              Studia shields your phone while you study, an AI witness rules on
-              your proof photo, and your school leaderboard watches you rise.
+              Studia lets you track your study sessions whilst locking your phone. Build a habit of focused work, track where you work best, and compete against other schools in your city, country, and around the world.
             </p>
 
             <div className="hero-cta mt-8 flex flex-wrap items-center gap-5">
               <AppStoreButton />
-              <span className="tag text-fg-muted">
-                Free — leaderboards never paywalled
-              </span>
             </div>
           </div>
 
@@ -172,7 +199,7 @@ export default function Hero() {
           className="absolute z-30 hidden h-[572px] w-[264px] overflow-hidden will-change-transform"
           aria-hidden="true"
         >
-          <ActiveScreen cue />
+          <ActiveScreen cue intro />
         </div>
       </div>
     </section>

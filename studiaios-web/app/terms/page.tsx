@@ -14,7 +14,7 @@ export default function TermsPage() {
     <LegalShell
       tag="Legal"
       title="Terms of Service"
-      meta={`Effective: ${EFFECTIVE_DATE} · Operated by ${COMPANY}`}
+      meta={`UPDATED: ${EFFECTIVE_DATE} · Operated by ${COMPANY}`}
       intro="These terms are a contract between you and us about using Studia. Plain-English summaries open each section, but the full text is what governs."
     >
       <LegalSection index="01" title="Accepting these terms">
@@ -62,8 +62,7 @@ export default function TermsPage() {
         </ul>
         <p>
           Cheating may result in removed sessions, leaderboard disqualification,
-          or account termination. The witness&rsquo;s ruling on a proof photo is
-          final.
+          or account termination.
         </p>
       </LegalSection>
 
@@ -125,7 +124,7 @@ export default function TermsPage() {
 
       <LegalSection index="06" title="Our content">
         <p>
-          Studia — including its design, branding, software, and the witness —
+          Studia — including its design, branding, and software,
           belongs to {COMPANY} and its licensors. We grant you a personal,
           non-transferable license to use the app on Apple-branded devices you
           own or control, per the App Store terms. This is the standard
@@ -134,11 +133,11 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection index="07" title="The shield, the witness, and your grades">
+      <LegalSection index="07" title="The shield, verification, and your grades">
         <p>
           Studia is a focus and motivation tool, not a guarantee. The app
           shield depends on Apple&rsquo;s Screen Time frameworks and may be
-          affected by iOS settings or restrictions. The AI witness makes
+          affected by iOS settings or restrictions. The AI verification process makes
           automated judgments that can occasionally be wrong in either
           direction. We provide Studia &ldquo;as is&rdquo; without warranties
           of any kind, and we&rsquo;re not responsible for exam results,
@@ -159,10 +158,14 @@ export default function TermsPage() {
 
       <LegalSection index="09" title="Termination">
         <p>
-          You can stop using Studia and delete your account at any time — see{" "}
-          <Link href="/delete-account" className="text-accent underline underline-offset-4">
-            Delete account
-          </Link>
+          You can stop using Studia and delete your account at any time — to
+          request deletion, email{" "}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="text-accent underline underline-offset-4"
+          >
+            {CONTACT_EMAIL}
+          </a>
           . We may suspend or terminate access for violations of these terms.
           Sections that by their nature should survive (content licenses,
           disclaimers, liability limits) survive termination.
@@ -171,7 +174,7 @@ export default function TermsPage() {
 
       <LegalSection index="10" title="Governing law and changes">
         <p>
-          These terms are governed by the laws of [JURISDICTION], excluding
+          These terms are governed by the laws of the United States, excluding
           conflict-of-law rules. We may update these terms; if changes are
           material we&rsquo;ll notify you in the app, and continued use after
           the effective date constitutes acceptance. Contact:{" "}

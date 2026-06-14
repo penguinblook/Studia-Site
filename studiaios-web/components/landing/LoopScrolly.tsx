@@ -13,27 +13,27 @@ import {
 const STEPS = [
   {
     num: "01",
-    tag: "01 — Lock in",
-    title: "Your phone goes quiet.",
-    body: "Start a session and Studia shields your distracting apps for up to two hours. Strict mode means no backing out — just an austere countdown and the work in front of you.",
+    tag: "01 Lock in",
+    title: "Your phone locks.",
+    body: "Start a session and Studia shields your distracting apps for up to two hours. Students say this helps them focus and get work done up to 80% more efficiently.",
   },
   {
     num: "02",
-    tag: "02 — Prove it",
+    tag: "02 Prove it",
     title: "Show your work.",
-    body: "When the timer ends, the camera opens. One live photo of your setup — books, notes, your screen. No gallery uploads. Three attempts, then the ruling stands.",
+    body: "When the timer ends, your camera opens. You must snap a photo of you studying or working on your project. ",
   },
   {
     num: "03",
-    tag: "03 — Get Verified",
+    tag: "03 Get Verified",
     title: "Earn the stamp.",
-    body: "A neutral AI witness rules on your proof. Pass, and you get the recap card — verified study time, stamped, ready to post.",
+    body: "Your photo gets reviewed by our servers and deemed verified study time or not. Only verified work contributes to your school, but unverified sessions count towards your personal stats and streaks.",
   },
   {
     num: "04",
-    tag: "04 — Climb",
+    tag: "04 Climb",
     title: "Watch your rank move.",
-    body: "Every verified minute counts — for your rank at school, and your school's rank in the city. Then you do it again tomorrow.",
+    body: "Every hour you spend studying with Studia contributes to your school's rank. Every hour you spend studying with Studia is progress towards your personal goals.",
   },
 ];
 
@@ -50,6 +50,7 @@ export default function LoopScrolly() {
       const captions = gsap.utils.toArray<HTMLElement>(".loop-caption", el);
       const ghosts = gsap.utils.toArray<HTMLElement>(".loop-ghost", el);
       const phone = el.querySelector(".loop-phone");
+      const ghostRail = el.querySelector(".loop-ghost-rail");
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -102,6 +103,19 @@ export default function LoopScrolly() {
           .addLabel(`s${i}`, i + 0.55);
       }
       tl.to({}, { duration: 0.45 });
+
+      // Parallax: the giant index drifts slowly upward across the whole pinned
+      // scroll, so it reads as a deeper layer behind the phone. Spans the full
+      // timeline (position 0, duration = total steps), independent of the
+      // per-step cross-fade running on the numerals themselves.
+      if (ghostRail) {
+        tl.fromTo(
+          ghostRail,
+          { yPercent: 9 },
+          { yPercent: -9, ease: "none", duration: STEPS.length },
+          0
+        );
+      }
     });
     return () => mm.revert();
   }, []);
@@ -109,23 +123,6 @@ export default function LoopScrolly() {
   return (
     <section ref={root} id="loop" className="bg-bg-warm">
       <div className="loop-pin relative flex min-h-svh flex-col overflow-hidden px-5 py-7 sm:px-8">
-        {/* oversized ghost numeral behind everything */}
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center md:justify-start md:pl-[4vw]"
-          aria-hidden="true"
-        >
-          <div className="stack">
-            {STEPS.map((s) => (
-              <span
-                key={s.num}
-                className="loop-ghost stack-item text-stroke display block text-[42vw] leading-none opacity-[0.14] md:text-[26vw]"
-              >
-                {s.num}
-              </span>
-            ))}
-          </div>
-        </div>
-
         <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between">
           <p className="tag text-fg-muted">The loop</p>
           <p className="font-mono text-sm text-fg-muted" aria-hidden="true">
@@ -153,8 +150,28 @@ export default function LoopScrolly() {
             </div>
           </div>
 
-          <div className="order-1 flex justify-center [perspective:1200px] md:order-none md:col-span-6 md:col-start-7">
-            <div className="loop-phone origin-center scale-[0.72] sm:scale-[0.85] md:scale-100">
+          <div className="relative order-1 flex justify-center [perspective:1200px] md:order-none md:col-span-6 md:col-start-7">
+            {/* giant step index — a bold accent-outlined numeral that rises
+                above the phone and drifts on scroll (parallax, set in JS). The
+                tint lives on this parent because the per-step cross-fade drives
+                each numeral's own opacity to full. */}
+            <div
+              className="loop-ghost-rail pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-[0.4]"
+              aria-hidden="true"
+            >
+              <div className="stack -translate-y-[20%] md:-translate-y-[24%]">
+                {STEPS.map((s) => (
+                  <span
+                    key={s.num}
+                    className="loop-ghost stack-item display block leading-[0.72] text-transparent text-[60vw] [-webkit-text-stroke:3px_var(--accent)] md:text-[42vw] lg:text-[34rem]"
+                  >
+                    {s.num}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="loop-phone relative z-10 origin-center scale-[0.72] sm:scale-[0.85] md:scale-100">
               <PhoneFrame label="The Studia loop on a phone: lock screen, proof camera, verified recap, leaderboard">
                 <div className="stack h-full">
                   <div className="loop-screen stack-item h-full">

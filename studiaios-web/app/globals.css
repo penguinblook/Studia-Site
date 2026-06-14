@@ -83,6 +83,23 @@ html {
   scroll-behavior: smooth;
 }
 
+/* hide scrollbars everywhere — Firefox + legacy IE */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* hide scrollbars everywhere — WebKit/Blink */
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+body {
+  overflow-x: hidden;
+}
+
 section[id] {
   scroll-margin-top: 72px;
 }

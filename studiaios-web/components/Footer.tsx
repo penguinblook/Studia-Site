@@ -11,44 +11,13 @@ export default function Footer() {
           <p className="mt-6 font-mono text-sm text-paper/40">{CONTACT_EMAIL}</p>
         </div>
 
-        <nav className="md:col-span-3" aria-label="Product">
+        <nav className="md:col-span-6 md:text-right" aria-label="Product">
           <p className="tag mb-4 text-paper/40">Product</p>
           <ul className="space-y-3">
             <li>
               <a href={APP_STORE_URL} className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
                 App Store
               </a>
-            </li>
-            <li>
-              <a href="/#plus" className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                Studia+
-              </a>
-            </li>
-            <li>
-              <Link href="/support" className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                Support
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        <nav className="md:col-span-3" aria-label="Legal">
-          <p className="tag mb-4 text-paper/40">Legal</p>
-          <ul className="space-y-3">
-            <li>
-              <Link href="/privacy" className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                Privacy policy
-              </Link>
-            </li>
-            <li>
-              <Link href="/terms" className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                Terms of service
-              </Link>
-            </li>
-            <li>
-              <Link href="/delete-account" className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                Delete account
-              </Link>
             </li>
           </ul>
         </nav>
@@ -59,7 +28,20 @@ export default function Footer() {
           <p className="tag text-paper/30">
             © 2026 {COMPANY}. All rights reserved.
           </p>
-          <p className="tag text-paper/30">Made for the ones who count minutes.</p>
+          <nav className="flex gap-6" aria-label="Legal">
+            <Link
+              href="/privacy"
+              className="tag text-paper/50 transition-colors hover:text-paper"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="tag text-paper/50 transition-colors hover:text-paper"
+            >
+              Terms
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

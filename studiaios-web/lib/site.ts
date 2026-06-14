@@ -5,6 +5,6 @@ export const SITE_URL = "https://studiaios.com";
 export const APP_STORE_URL = "https://apps.apple.com/app/studia";
 
 /** Placeholders — fill these in (also used across legal pages). */
-export const CONTACT_EMAIL = "[CONTACT_EMAIL]";
-export const COMPANY = "[COMPANY/LEGAL ENTITY]";
-export const EFFECTIVE_DATE = "[EFFECTIVE_DATE]";
+export const CONTACT_EMAIL = "support@studiaios.com";
+export const COMPANY = "Studia iOS";
+export const EFFECTIVE_DATE = "June 14, 2026";
