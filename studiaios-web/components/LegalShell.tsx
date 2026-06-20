@@ -15,7 +15,7 @@ export function LegalShell({
 }: {
   tag: string;
   title: string;
-  intro?: string;
+  intro?: ReactNode;
   meta?: string;
   children: ReactNode;
 }) {

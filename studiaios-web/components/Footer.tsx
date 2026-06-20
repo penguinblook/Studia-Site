@@ -30,6 +30,12 @@ export default function Footer() {
           </p>
           <nav className="flex gap-6" aria-label="Legal">
             <Link
+              href="/support"
+              className="tag text-paper/50 transition-colors hover:text-paper"
+            >
+              Support
+            </Link>
+            <Link
               href="/privacy"
               className="tag text-paper/50 transition-colors hover:text-paper"
             >
