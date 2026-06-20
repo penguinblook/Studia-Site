@@ -49,11 +49,10 @@ export default function SupportPage() {
 
       <LegalSection index="02" title="I lost my streak / my stats look wrong">
         <p>
-          Streaks are based on verified sessions in your local time zone.
-          Traveling across time zones, a missed day, or an unverified session
-          can break a streak. If your stats look genuinely off, send us your
-          account email and roughly when it happened and we&rsquo;ll
-          investigate.
+          Streaks are based on studying each day in your local time zone.
+          Traveling across time zones or a missed day can break a streak. If
+          your stats look genuinely off, send us your account email and roughly
+          when it happened and we&rsquo;ll investigate.
         </p>
       </LegalSection>
 
