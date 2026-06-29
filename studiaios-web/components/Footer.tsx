@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { APP_STORE_URL, COMPANY, CONTACT_EMAIL } from "@/lib/site";
+import { COMPANY, CONTACT_EMAIL } from "@/lib/site";
+import AppStoreButton from "./AppStoreButton";
 
 export default function Footer() {
   return (
@@ -13,13 +14,9 @@ export default function Footer() {
 
         <nav className="md:col-span-6 md:text-right" aria-label="Product">
           <p className="tag mb-4 text-paper/40">Product</p>
-          <ul className="space-y-3">
-            <li>
-              <a href={APP_STORE_URL} className="font-mono text-sm text-paper/70 transition-colors hover:text-paper">
-                App Store
-              </a>
-            </li>
-          </ul>
+          <div className="flex md:justify-end">
+            <AppStoreButton variant="paper" imgClassName="h-12" />
+          </div>
         </nav>
       </div>
 

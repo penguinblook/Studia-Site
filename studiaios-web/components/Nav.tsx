@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { APP_STORE_URL } from "@/lib/site";
+import AppStoreButton from "./AppStoreButton";
 
 export default function Nav() {
   return (
@@ -11,12 +11,7 @@ export default function Nav() {
         <Link href="/" className="display text-lg leading-none">
           Studia
         </Link>
-        <a
-          href={APP_STORE_URL}
-          className="tag bg-blue px-4 py-2.5 text-paper transition-colors hover:bg-blue-deep"
-        >
-          Get the app
-        </a>
+        <AppStoreButton variant="dark" imgClassName="h-10" />
       </nav>
     </header>
   );
